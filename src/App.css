@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
 .App {
 
@@ -10,7 +10,7 @@
 
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 a {
@@ -22,11 +22,15 @@ button {
   cursor: pointer;
   background-color: unset;
   font-family: inherit;
+  font-size: 18px;
+}
+
+input, textarea {
+  font-family: inherit;
+  font-size: 18px;
 }
 
 main {
-  max-width: 1024px;
-  margin: 0 auto;
   padding: 10px;
   min-height: calc(100vh - 100px);
 }
