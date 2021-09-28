@@ -20,21 +20,32 @@ export class AddPostForm extends React.Component {
         })
     }
 
+    // componentDidMount() {
+    //     console.log('вы изменили состоянию')
+    // }
+    //
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     console.log('вы обновили состоянию')
+    // }
+    //
+    // componentWillUnmount() {
+    //     console.log('вы удалили состоянию')
+    // }
 
     render() {
         const handleAddFormHide = this.props.handleAddFormHide
         return (
             <>
-                <form action="" className="AddPostForm">
+                <form className="AddPostForm">
                     <button className="hideBtn" onClick={handleAddFormHide}><Cancel/></button>
                     <h2>Создание поста</h2>
                     <div>
                         <input type="text" className="AddFormInput" name="postTitle" placeholder="Заголовок поста"
-                               value={this.state.postTitle} onChange={this.handlePostTitleChange} />
+                               value={this.state.postTitle} onChange={this.handlePostTitleChange}/>
                     </div>
                     <div>
                         <textarea name="postDescription" className="AddFormInput" placeholder="Описание"
-                                  value={this.state.postDescription} onChange={this.handlePostDescriptionChange} />
+                                  value={this.state.postDescription} onChange={this.handlePostDescriptionChange}/>
                     </div>
                     <div>
                         <button onClick={handleAddFormHide} className="blackBtn" type="button">Добавить пост</button>

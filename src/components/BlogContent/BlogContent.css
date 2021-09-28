@@ -3,6 +3,10 @@
     margin: 0 auto;
 }
 
+.addNewPost {
+    text-align: center;
+}
+
 .blackBtn {
     padding: 5px 15px;
     border-radius: 16px;

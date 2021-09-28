@@ -48,6 +48,20 @@ export class BlogContent extends Component {
         })
     }
 
+    handleEscape = (e) => {
+        if (e.key === 'Escape' && this.state.showAddForm) {
+            this.handleAddFormHide()
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener('keyup', this.handleEscape)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keyup', this.handleEscape)
+    }
+
     render() {
         const blogPosts = this.state.blogArray.map((item, pos) => {
             return (
@@ -64,12 +78,14 @@ export class BlogContent extends Component {
         return (
             <>
                 {
-                    this.state.showAddForm ? <AddPostForm handleAddFormHide={this.handleAddFormHide} /> : null
+                    this.state.showAddForm ? <AddPostForm handleAddFormHide={this.handleAddFormHide}/> : null
                 }
 
                 <>
-                    <h1>Simple Blog</h1>
-                    <button className="blackBtn" onClick={this.handleAddFormShow}>Создать новый пост</button>
+                    <h1>Blog Page</h1>
+                    <div className="addNewPost">
+                        <button className="blackBtn" onClick={this.handleAddFormShow}>Создать новый пост</button>
+                    </div>
                     <div className="posts"> {blogPosts} </div>
                 </>
             </>
