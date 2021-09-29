@@ -51,6 +51,18 @@ export class BlogContent extends Component {
         // })
     }
 
+    addNewBlogPost = blogPost => {
+
+        axios.post('https://61544bff2473940017efad71.mockapi.io/api/posts/posts/', blogPost)
+            .then((response) => {
+                console.log('Пост создан =>', response.data)
+                this.fetchPosts()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     deletePost = blogPost => {
         if (window.confirm(`Delete ${blogPost.title} ?`)) {
 
@@ -92,19 +104,6 @@ export class BlogContent extends Component {
         if (e.key === 'Escape' && this.state.showAddForm) {
             this.handleAddFormHide()
         }
-    }
-
-    addNewBlogPost = (blogPost) => {
-
-        this.setState((state) => {
-            const posts = [...state.blogArray]
-            posts.push(blogPost)
-            localStorage.setItem('blogPosts', JSON.stringify(posts))
-
-            return {
-                blogArray: posts
-            }
-        })
     }
 
     componentDidMount() {

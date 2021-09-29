@@ -20,9 +20,9 @@ export class AddPostForm extends React.Component {
         })
     }
 
-    // componentDidMount() {
-    //     console.log('вы изменили состоянию')
-    // }
+    componentDidMount() {
+        this.nameInput.focus();
+    }
     //
     // componentDidUpdate(prevProps, prevState, snapshot) {
     //     console.log('вы обновили состоянию')
@@ -35,7 +35,6 @@ export class AddPostForm extends React.Component {
     createPost = (e) => {
         e.preventDefault()
         const post = {
-            id: this.props.blogArray.length + 1,
             title: this.state.postTitle,
             description: this.state.postDescription,
             liked: false
@@ -59,6 +58,7 @@ export class AddPostForm extends React.Component {
                                placeholder="Заголовок поста"
                                value={this.state.postTitle}
                                onChange={this.handlePostTitleChange}
+                               ref={(input) => { this.nameInput = input; }}
                                required
                         />
                     </div>
