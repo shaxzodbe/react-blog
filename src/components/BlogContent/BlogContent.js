@@ -12,17 +12,24 @@ export class BlogContent extends Component {
     }
 
     likePost = pos => {
+        const temp = [...this.state.blogArray];
+        temp[pos].liked = !temp[pos].liked
 
-        this.setState((state) => {
-            const temp = [...state.blogArray];
-            temp[pos].liked = !temp[pos].liked
-
-            localStorage.setItem('blogPosts', JSON.stringify(temp))
-
-            return {
-                blogArray: temp
-            }
+        this.setState({
+            blogArray: temp
         })
+        localStorage.setItem('blogPosts', JSON.stringify(temp))
+
+        // this.setState((state) => {
+        //     const temp = [...state.blogArray];
+        //     temp[pos].liked = !temp[pos].liked
+        //
+        //     localStorage.setItem('blogPosts', JSON.stringify(temp))
+        //
+        //     return {
+        //         blogArray: temp
+        //     }
+        // })
     }
 
     deletePost = pos => {
@@ -69,10 +76,10 @@ export class BlogContent extends Component {
                 blogArray: posts
             }
         })
-        this.handleAddFormHide()
     }
 
     componentDidMount() {
+        axios
         window.addEventListener('keyup', this.handleEscape)
     }
 
@@ -100,6 +107,7 @@ export class BlogContent extends Component {
                         <AddPostForm
                             blogArray={this.state.blogArray}
                             addNewBlogPost={this.addNewBlogPost}
+                            handleAddFormHide={this.handleAddFormHide}
                         /> : null
                 }
 

@@ -32,7 +32,8 @@ export class AddPostForm extends React.Component {
     //     console.log('вы удалили состоянию')
     // }
 
-    createPost = () => {
+    createPost = (e) => {
+        e.preventDefault()
         const post = {
             id: this.props.blogArray.length + 1,
             title: this.state.postTitle,
@@ -40,6 +41,7 @@ export class AddPostForm extends React.Component {
             liked: false
         }
         this.props.addNewBlogPost(post)
+        this.props.handleAddFormHide()
     }
 
 
@@ -47,19 +49,30 @@ export class AddPostForm extends React.Component {
         const handleAddFormHide = this.props.handleAddFormHide
         return (
             <>
-                <form className="AddPostForm">
+                <form className="AddPostForm" onSubmit={this.createPost}>
                     <button className="hideBtn" onClick={handleAddFormHide}><Cancel/></button>
                     <h2>Создание поста</h2>
                     <div>
-                        <input type="text" className="AddFormInput" name="postTitle" placeholder="Заголовок поста"
-                               value={this.state.postTitle} onChange={this.handlePostTitleChange}/>
+                        <input type="text"
+                               className="AddFormInput"
+                               name="postTitle"
+                               placeholder="Заголовок поста"
+                               value={this.state.postTitle}
+                               onChange={this.handlePostTitleChange}
+                               required
+                        />
                     </div>
                     <div>
-                        <textarea name="postDescription" className="AddFormInput" placeholder="Описание"
-                                  value={this.state.postDescription} onChange={this.handlePostDescriptionChange}/>
+                        <textarea name="postDescription"
+                                  className="AddFormInput"
+                                  placeholder="Описание"
+                                  value={this.state.postDescription}
+                                  onChange={this.handlePostDescriptionChange}
+                                  required
+                        />
                     </div>
                     <div>
-                        <button onClick={this.createPost} className="blackBtn" type="button">Добавить пост</button>
+                        <button type="submit" className="blackBtn">Добавить пост</button>
                     </div>
                 </form>
                 <div className="overlay" onClick={handleAddFormHide}/>
