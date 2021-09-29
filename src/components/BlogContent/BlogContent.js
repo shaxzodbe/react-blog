@@ -13,9 +13,6 @@ export class BlogContent extends Component {
     }
 
     fetchPosts = () => {
-        this.setState({
-            isPending: true
-        })
         axios.get(`https://61544bff2473940017efad71.mockapi.io/api/posts/posts/`)
             .then((response) => {
                 // handle success
@@ -30,29 +27,26 @@ export class BlogContent extends Component {
             })
     }
 
-    likePost = pos => {
-        const temp = [...this.state.blogArray];
-        temp[pos].liked = !temp[pos].liked
+    likePost = blogPost => {
 
-        this.setState({
-            blogArray: temp
-        })
-        localStorage.setItem('blogPosts', JSON.stringify(temp))
+        const temp = {...blogPost}
+        temp.liked = !temp.liked
 
-        // this.setState((state) => {
-        //     const temp = [...state.blogArray];
-        //     temp[pos].liked = !temp[pos].liked
-        //
-        //     localStorage.setItem('blogPosts', JSON.stringify(temp))
-        //
-        //     return {
-        //         blogArray: temp
-        //     }
-        // })
+
+        axios.put(`https://61544bff2473940017efad71.mockapi.io/api/posts/posts/${blogPost.id}`, temp)
+            .then((response) => {
+                console.log('Пост изменён => ', response.data)
+                this.fetchPosts()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     addNewBlogPost = blogPost => {
-
+        this.setState({
+            isPending: true
+        })
         axios.post('https://61544bff2473940017efad71.mockapi.io/api/posts/posts/', blogPost)
             .then((response) => {
                 console.log('Пост создан =>', response.data)
@@ -64,7 +58,11 @@ export class BlogContent extends Component {
     }
 
     deletePost = blogPost => {
+
         if (window.confirm(`Delete ${blogPost.title} ?`)) {
+            this.setState({
+                isPending: true
+            })
 
             axios.delete(`https://61544bff2473940017efad71.mockapi.io/api/posts/posts/${blogPost.id}`)
                 .then((response) => {
@@ -123,7 +121,7 @@ export class BlogContent extends Component {
                     title={item.title}
                     description={item.description}
                     liked={item.liked}
-                    likePost={() => this.likePost(pos)}
+                    likePost={() => this.likePost(item)}
                     deletePost={() => this.deletePost(item)}/>
             )
         })
