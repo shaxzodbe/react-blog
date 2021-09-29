@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import './BlogContent.css'
-import {posts} from "../../shared/ProjectData";
 import {BlogCard} from "./components/BlogCard";
 import {AddPostForm} from "./components/AddPostForm";
+import axios from "axios";
 
 export class BlogContent extends Component {
 
     state = {
         showAddForm: false,
-        blogArray: JSON.parse(localStorage.getItem('blogPosts')) || posts
+        blogArray: []
     }
 
     likePost = pos => {
@@ -79,7 +79,20 @@ export class BlogContent extends Component {
     }
 
     componentDidMount() {
-        axios
+        axios.get('https://5fb3db44b6601200168f7fba.mockapi.io/api/posts/')
+            .then((response) => {
+                // handle success
+                this.setState({
+                    blogArray: response.data
+                })
+            })
+            .catch((error) => {
+                // handle error
+                console.log(error);
+            })
+        // .then(function () {
+        //     // always executed
+        // });
         window.addEventListener('keyup', this.handleEscape)
     }
 
@@ -100,15 +113,18 @@ export class BlogContent extends Component {
             )
         })
 
+        if (this.state.blogArray.length === 0)
+            return <h1>Загружаю данные...</h1>
+
         return (
             <>
                 {
-                    this.state.showAddForm ?
-                        <AddPostForm
-                            blogArray={this.state.blogArray}
-                            addNewBlogPost={this.addNewBlogPost}
-                            handleAddFormHide={this.handleAddFormHide}
-                        /> : null
+                    this.state.showAddForm &&
+                    <AddPostForm
+                        blogArray={this.state.blogArray}
+                        addNewBlogPost={this.addNewBlogPost}
+                        handleAddFormHide={this.handleAddFormHide}
+                    />
                 }
 
                 <>
