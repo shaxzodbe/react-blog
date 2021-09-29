@@ -8,7 +8,26 @@ export class BlogContent extends Component {
 
     state = {
         showAddForm: false,
-        blogArray: []
+        blogArray: [],
+        isPending: false
+    }
+
+    fetchPosts = () => {
+        this.setState({
+            isPending: true
+        })
+        axios.get(`https://61544bff2473940017efad71.mockapi.io/api/posts/posts/`)
+            .then((response) => {
+                // handle success
+                this.setState({
+                    blogArray: response.data,
+                    isPending: false
+                })
+            })
+            .catch((error) => {
+                // handle error
+                console.log(error);
+            })
     }
 
     likePost = pos => {
@@ -32,19 +51,29 @@ export class BlogContent extends Component {
         // })
     }
 
-    deletePost = pos => {
-        if (window.confirm(`Delete ${this.state.blogArray[pos].title} ?`)) {
+    deletePost = blogPost => {
+        if (window.confirm(`Delete ${blogPost.title} ?`)) {
 
-            this.setState((state) => {
-                const temp = [...state.blogArray]
-                temp.splice(pos, 1)
+            axios.delete(`https://61544bff2473940017efad71.mockapi.io/api/posts/posts/${blogPost.id}`)
+                .then((response) => {
+                    console.log('Вы удалили =>', response.data)
 
-                localStorage.setItem('blogPosts', JSON.stringify(temp))
+                    this.fetchPosts()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
 
-                return {
-                    blogArray: temp
-                }
-            })
+            // this.setState((state) => {
+            //     const temp = [...state.blogArray]
+            //     temp.splice(pos, 1)
+            //
+            //     localStorage.setItem('blogPosts', JSON.stringify(temp))
+            //
+            //     return {
+            //         blogArray: temp
+            //     }
+            // })
         }
     }
 
@@ -79,20 +108,7 @@ export class BlogContent extends Component {
     }
 
     componentDidMount() {
-        axios.get('https://5fb3db44b6601200168f7fba.mockapi.io/api/posts/')
-            .then((response) => {
-                // handle success
-                this.setState({
-                    blogArray: response.data
-                })
-            })
-            .catch((error) => {
-                // handle error
-                console.log(error);
-            })
-        // .then(function () {
-        //     // always executed
-        // });
+        this.fetchPosts()
         window.addEventListener('keyup', this.handleEscape)
     }
 
@@ -109,7 +125,7 @@ export class BlogContent extends Component {
                     description={item.description}
                     liked={item.liked}
                     likePost={() => this.likePost(pos)}
-                    deletePost={() => this.deletePost(pos)}/>
+                    deletePost={() => this.deletePost(item)}/>
             )
         })
 
@@ -135,6 +151,9 @@ export class BlogContent extends Component {
                             onClick={this.handleAddFormShow}>Создать новый пост
                         </button>
                     </div>
+                    {
+                        this.state.isPending && <h2>Подождите...</h2>
+                    }
                     <div className="posts"> {blogPosts} </div>
                 </>
             </>
