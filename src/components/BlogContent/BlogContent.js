@@ -12,28 +12,32 @@ export class BlogContent extends Component {
     }
 
     likePost = pos => {
-        const temp = [...this.state.blogArray];
-        temp[pos].liked = !temp[pos].liked
 
-        this.setState({
-            blogArray: temp
+        this.setState((state) => {
+            const temp = [...state.blogArray];
+            temp[pos].liked = !temp[pos].liked
+
+            localStorage.setItem('blogPosts', JSON.stringify(temp))
+
+            return {
+                blogArray: temp
+            }
         })
-
-        localStorage.setItem('blogPosts', JSON.stringify(temp))
     }
 
     deletePost = pos => {
         if (window.confirm(`Delete ${this.state.blogArray[pos].title} ?`)) {
-            const temp = [...this.state.blogArray]
-            temp.splice(pos, 1)
 
-            console.log('Default array =>', this.state.blogArray)
-            console.log('Changed array =>', temp)
+            this.setState((state) => {
+                const temp = [...state.blogArray]
+                temp.splice(pos, 1)
 
-            this.setState({
-                blogArray: temp
+                localStorage.setItem('blogPosts', JSON.stringify(temp))
+
+                return {
+                    blogArray: temp
+                }
             })
-            localStorage.setItem('blogPosts', JSON.stringify(temp))
         }
     }
 
@@ -52,6 +56,20 @@ export class BlogContent extends Component {
         if (e.key === 'Escape' && this.state.showAddForm) {
             this.handleAddFormHide()
         }
+    }
+
+    addNewBlogPost = (blogPost) => {
+
+        this.setState((state) => {
+            const posts = [...state.blogArray]
+            posts.push(blogPost)
+            localStorage.setItem('blogPosts', JSON.stringify(posts))
+
+            return {
+                blogArray: posts
+            }
+        })
+        this.handleAddFormHide()
     }
 
     componentDidMount() {
@@ -78,13 +96,20 @@ export class BlogContent extends Component {
         return (
             <>
                 {
-                    this.state.showAddForm ? <AddPostForm handleAddFormHide={this.handleAddFormHide}/> : null
+                    this.state.showAddForm ?
+                        <AddPostForm
+                            blogArray={this.state.blogArray}
+                            addNewBlogPost={this.addNewBlogPost}
+                        /> : null
                 }
 
                 <>
                     <h1>Blog Page</h1>
                     <div className="addNewPost">
-                        <button className="blackBtn" onClick={this.handleAddFormShow}>Создать новый пост</button>
+                        <button
+                            className="blackBtn"
+                            onClick={this.handleAddFormShow}>Создать новый пост
+                        </button>
                     </div>
                     <div className="posts"> {blogPosts} </div>
                 </>

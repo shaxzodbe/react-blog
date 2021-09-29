@@ -32,6 +32,17 @@ export class AddPostForm extends React.Component {
     //     console.log('вы удалили состоянию')
     // }
 
+    createPost = () => {
+        const post = {
+            id: this.props.blogArray.length + 1,
+            title: this.state.postTitle,
+            description: this.state.postDescription,
+            liked: false
+        }
+        this.props.addNewBlogPost(post)
+    }
+
+
     render() {
         const handleAddFormHide = this.props.handleAddFormHide
         return (
@@ -48,12 +59,10 @@ export class AddPostForm extends React.Component {
                                   value={this.state.postDescription} onChange={this.handlePostDescriptionChange}/>
                     </div>
                     <div>
-                        <button onClick={handleAddFormHide} className="blackBtn" type="button">Добавить пост</button>
+                        <button onClick={this.createPost} className="blackBtn" type="button">Добавить пост</button>
                     </div>
                 </form>
-                <div className="overlay" onClick={handleAddFormHide}>
-
-                </div>
+                <div className="overlay" onClick={handleAddFormHide}/>
             </>
         );
     }
