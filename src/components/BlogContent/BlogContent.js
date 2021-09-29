@@ -3,6 +3,7 @@ import './BlogContent.css'
 import {BlogCard} from "./components/BlogCard";
 import {AddPostForm} from "./components/AddPostForm";
 import axios from "axios";
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
 export class BlogContent extends Component {
 
@@ -129,8 +130,10 @@ export class BlogContent extends Component {
         if (this.state.blogArray.length === 0)
             return <h1>Загружаю данные...</h1>
 
+        const postsOpacity = this.state.isPending ? 0.5 : 1
+
         return (
-            <>
+            <div className="blogPage">
                 {
                     this.state.showAddForm &&
                     <AddPostForm
@@ -148,12 +151,12 @@ export class BlogContent extends Component {
                             onClick={this.handleAddFormShow}>Создать новый пост
                         </button>
                     </div>
-                    {
-                        this.state.isPending && <h2>Подождите...</h2>
-                    }
-                    <div className="posts"> {blogPosts} </div>
+                    <div className="posts" style={{opacity: postsOpacity}}>
+                        {blogPosts}
+                    </div>
+                    {this.state.isPending && <CircularProgress className="preloader" /> }
                 </>
-            </>
+            </div>
         )
     }
 }
