@@ -4,6 +4,19 @@
     justify-content: space-between;
 }
 
-.deleteBtn svg {
+.postControl {
+    display: flex;
+    align-items: center;
+}
+
+.postControl button {
+    padding: 0;
+}
+
+.editBtn svg {
+    font-size: 32px;
+}
+
+.deleteBtn svg{
     font-size: 40px;
 }

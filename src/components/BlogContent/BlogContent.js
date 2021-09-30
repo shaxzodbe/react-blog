@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './BlogContent.css'
 import {BlogCard} from "./components/BlogCard";
 import {AddPostForm} from "./components/AddPostForm";
+import {EditPostForm} from "./components/EditPostForm";
 import axios from "axios";
 import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
@@ -9,8 +10,10 @@ export class BlogContent extends Component {
 
     state = {
         showAddForm: false,
+        showEditForm: false,
         blogArray: [],
-        isPending: false
+        isPending: false,
+        selectedPost: {}
     }
 
     fetchPosts = () => {
@@ -74,18 +77,22 @@ export class BlogContent extends Component {
                 .catch((err) => {
                     console.log(err)
                 })
-
-            // this.setState((state) => {
-            //     const temp = [...state.blogArray]
-            //     temp.splice(pos, 1)
-            //
-            //     localStorage.setItem('blogPosts', JSON.stringify(temp))
-            //
-            //     return {
-            //         blogArray: temp
-            //     }
-            // })
         }
+    }
+
+    editBlogPost = updatedBlogPost => {
+        this.setState({
+            isPending: true
+        })
+
+        axios.put(`https://61544bff2473940017efad71.mockapi.io/api/posts/posts/${updatedBlogPost.id}`, updatedBlogPost)
+            .then((response) => {
+                console.log('Пост отредактирован =>', response.data)
+                this.fetchPosts()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     handleAddFormShow = () => {
@@ -98,20 +105,24 @@ export class BlogContent extends Component {
             showAddForm: false
         })
     }
-
-    handleEscape = (e) => {
-        if (e.key === 'Escape' && this.state.showAddForm) {
-            this.handleAddFormHide()
-        }
+    handleEditFormShow = () => {
+        this.setState({
+            showEditForm: true
+        })
+    }
+    handleEditFormHide = () => {
+        this.setState({
+            showEditForm: false
+        })
+    }
+    handleSelectPost = (blogPost) => {
+        this.setState({
+            selectedPost: blogPost
+        })
     }
 
     componentDidMount() {
         this.fetchPosts()
-        window.addEventListener('keyup', this.handleEscape)
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('keyup', this.handleEscape)
     }
 
     render() {
@@ -123,7 +134,10 @@ export class BlogContent extends Component {
                     description={item.description}
                     liked={item.liked}
                     likePost={() => this.likePost(item)}
-                    deletePost={() => this.deletePost(item)}/>
+                    deletePost={() => this.deletePost(item)}
+                    handleEditFormShow={this.handleEditFormShow}
+                    handleSelectPost={() => this.handleSelectPost(item)}
+                />
             )
         })
 
@@ -142,7 +156,14 @@ export class BlogContent extends Component {
                         handleAddFormHide={this.handleAddFormHide}
                     />
                 }
-
+                {
+                    this.state.showEditForm &&
+                    <EditPostForm
+                        handleEditFormHide={this.handleEditFormHide}
+                        selectedPost={this.state.selectedPost}
+                        editBlogPost={this.editBlogPost}
+                    />
+                }
                 <>
                     <h1>Blog Page</h1>
                     <div className="addNewPost">
@@ -154,7 +175,7 @@ export class BlogContent extends Component {
                     <div className="posts" style={{opacity: postsOpacity}}>
                         {blogPosts}
                     </div>
-                    {this.state.isPending && <CircularProgress className="preloader" /> }
+                    {this.state.isPending && <CircularProgress className="preloader"/>}
                 </>
             </div>
         )

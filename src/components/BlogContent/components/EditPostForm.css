@@ -1,4 +1,4 @@
-.addPostForm {
+.editPostForm {
     position: fixed;
     left: 50%;
     top: 50%;
@@ -12,7 +12,7 @@
     text-align: center;
     border-radius: 10px;
 }
-.addPostForm input, .addPostForm textarea {
+.editPostForm input, .editPostForm textarea {
     height: 100%;
     width: 100%;
 }
@@ -21,11 +21,11 @@ h2 {
     margin-top: 0;
 }
 
-.addPostForm div + div {
+.editPostForm div + div {
     margin-top: 10px;
 }
 
-.addFormInput {
+.editFormInput {
     padding: 10px;
     width: 100%;
 }

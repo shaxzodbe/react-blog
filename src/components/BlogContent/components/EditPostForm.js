@@ -1,12 +1,12 @@
 import React from 'react';
-import './AddPostForm.css'
+import './EditPostForm.css'
 import Cancel from '@material-ui/icons/Cancel';
 
-export class AddPostForm extends React.Component {
+export class EditPostForm extends React.Component {
 
     state = {
-        postTitle: '',
-        postDescription: ''
+        postTitle: this.props.selectedPost.title,
+        postDescription: this.props.selectedPost.description
     }
 
     handlePostTitleChange = e => {
@@ -19,9 +19,22 @@ export class AddPostForm extends React.Component {
             postDescription: e.target.value
         })
     }
+
+    savePost = e => {
+        e.preventDefault()
+        const post = {
+            id: this.props.selectedPost.id,
+            title: this.state.postTitle,
+            description: this.state.postDescription,
+            liked: this.props.selectedPost.liked
+        }
+        this.props.editBlogPost(post);
+        this.props.handleEditFormHide();
+    }
+
     handleEscape = (e) => {
         if (e.key === 'Escape') {
-            this.props.handleAddFormHide()
+            this.props.handleEditFormHide()
         }
     }
 
@@ -29,35 +42,20 @@ export class AddPostForm extends React.Component {
         window.addEventListener('keyup', this.handleEscape)
     }
 
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     console.log('вы обновили состоянию')
-    // }
-
     componentWillUnmount() {
         window.removeEventListener('keyup', this.handleEscape)
     }
 
-    createPost = (e) => {
-        e.preventDefault()
-        const post = {
-            title: this.state.postTitle,
-            description: this.state.postDescription,
-            liked: false
-        }
-        this.props.addNewBlogPost(post)
-        this.props.handleAddFormHide()
-    }
-
     render() {
-        const handleAddFormHide = this.props.handleAddFormHide
+        const handleEditFormHide = this.props.handleEditFormHide
         return (
             <>
-                <form className="addPostForm" onSubmit={this.createPost}>
-                    <button className="hideBtn" onClick={handleAddFormHide}><Cancel/></button>
-                    <h2>Создание поста</h2>
+                <form className="addPostForm" onSubmit={this.savePost}>
+                    <button className="hideBtn" onClick={handleEditFormHide}><Cancel/></button>
+                    <h2>Редактирование поста</h2>
                     <div>
                         <input type="text"
-                               className="addFormInput"
+                               className="editFormInput"
                                name="postTitle"
                                placeholder="Заголовок поста"
                                value={this.state.postTitle}
@@ -67,7 +65,7 @@ export class AddPostForm extends React.Component {
                     </div>
                     <div>
                         <textarea name="postDescription"
-                                  className="addFormInput"
+                                  className="editFormInput"
                                   placeholder="Описание"
                                   value={this.state.postDescription}
                                   onChange={this.handlePostDescriptionChange}
@@ -75,10 +73,10 @@ export class AddPostForm extends React.Component {
                         />
                     </div>
                     <div>
-                        <button type="submit" className="blackBtn">Добавить пост</button>
+                        <button type="submit" className="blackBtn">Сохранить</button>
                     </div>
                 </form>
-                <div className="overlay" onClick={handleAddFormHide}/>
+                <div className="overlay" onClick={handleEditFormHide}/>
             </>
         );
     }
